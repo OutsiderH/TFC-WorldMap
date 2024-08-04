@@ -1,0 +1,11 @@
+# vscode
+.vscode
+
+# gradle
+build
+.gradle
+
+# other
+run
+run-data
+src\generated

@@ -1,0 +1,5 @@
+{
+    "item.tfcworldmap.map" : "map",
+    "item.tfcworldmap.atlas" : "atlas",
+    "creative_mod_tab.tfcworldmap.main" : "TerraFirmaCraft world map"
+}
