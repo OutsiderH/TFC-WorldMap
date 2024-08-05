@@ -14,7 +14,7 @@ public class Menu extends AbstractContainerMenu {
     }
     @Override
     public ItemStack quickMoveStack(@Nonnull Player player, int pIndex) {
-        throw new UnsupportedOperationException("Unimplemented method 'quickMoveStack'");
+        return ItemStack.EMPTY;
     }
     @Override
     public boolean stillValid(@Nonnull Player player) {

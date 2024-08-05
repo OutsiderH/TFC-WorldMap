@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.outsiderh.tfcworldmap.common.item.AtlasItem;
-import com.outsiderh.tfcworldmap.common.item.MapItem;
 import com.outsiderh.tfcworldmap.common.menu.AtlasMenu;
 import com.outsiderh.tfcworldmap.common.util.registry.RegistryUtil;
 
@@ -33,20 +32,17 @@ public final class Main {
         itemRegister.register(modEventBus);
         creativeModTabRegister.register(modEventBus);
         menuRegister.register(modEventBus);
-        RegistryObjects.mapItem = itemRegister.register("map", MapItem::new);
         RegistryObjects.atlasItem = itemRegister.register("atlas", AtlasItem::new);
         RegistryObjects.mainCreativeModTab = creativeModTabRegister.register("main", () -> CreativeModeTab.builder()
             .title(Component.translatable(String.format("creative_mod_tab.%s.main", Main.modId)))
             .icon(() -> new ItemStack(RegistryObjects.atlasItem.get()))
             .displayItems((param, output) -> {
-                output.accept(RegistryObjects.mapItem.get());
                 output.accept(RegistryObjects.atlasItem.get());
             })
             .build());
         RegistryObjects.atlasMenu = RegistryUtil.registerItemStackMenu(menuRegister, "atlas", AtlasMenu::create);
     }
     public static class RegistryObjects {
-        public static RegistryObject<Item> mapItem;
         public static RegistryObject<Item> atlasItem;
         public static RegistryObject<CreativeModeTab> mainCreativeModTab;
         public static RegistryObject<MenuType<AtlasMenu>> atlasMenu;

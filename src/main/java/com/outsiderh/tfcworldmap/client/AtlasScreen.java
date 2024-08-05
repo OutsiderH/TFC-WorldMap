@@ -7,8 +7,8 @@ import com.outsiderh.tfcworldmap.client.collection.Rect;
 import com.outsiderh.tfcworldmap.client.page.AtlasPage;
 import com.outsiderh.tfcworldmap.client.page.AtlasPages;
 import com.outsiderh.tfcworldmap.client.page.PaperAndInkPage;
-import com.outsiderh.tfcworldmap.common.HideableSlot;
 import com.outsiderh.tfcworldmap.common.menu.AtlasMenu;
+import com.outsiderh.tfcworldmap.common.menu.slot.IHideable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -23,6 +23,10 @@ public class AtlasScreen extends AbstractContainerScreen<AtlasMenu> {
     public static final FixedRect pageRenderPositionLocal = new FixedRect(13, 11, 162, 147);
     private static final ResourceLocation atlasTextureAtlas = new ResourceLocation("tfcworldmap", "textures/gui/atlas.png");
     private static final FixedRect atlasRect = new FixedRect(1, 1, 190, 180);
+    private static final FixedRect inventoryBarRect = new FixedRect(93, 237, 162, 18);
+    private static final FixedRect inventorySlotRect = new FixedRect(93, 237, 18, 18);
+    private static final FixedRect incSacIconRect = new FixedRect(193, 1, 16, 16);
+    private static final FixedRect paperIconRect = new FixedRect(209, 1, 16, 16);
     private final Rect pageRenderPosition;
     private AtlasPage currentPage;
     private byte includedMap;
@@ -55,12 +59,31 @@ public class AtlasScreen extends AbstractContainerScreen<AtlasMenu> {
         currentPage = addRenderableWidget(PageButton.create(atlasTextureAtlas, leftPos + 180, buttonPosY, new PaperAndInkPage(), this::onPageButtonPressed)).getPage();
     }
     @Override
+    public void render(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        renderBackground(guiGraphics);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        renderTooltip(guiGraphics, mouseX, mouseY);
+    }
+    @Override
     protected void renderBg(@Nonnull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         GuiRenderer.sprite(guiGraphics, atlasTextureAtlas, leftPos, topPos, atlasRect);
+        if (currentPage.shouldShowInventory) {
+            GuiRenderer.sprite(guiGraphics, atlasTextureAtlas, pageRenderPosition.x, pageRenderPosition.y2() - 17, inventoryBarRect);
+            GuiRenderer.sprite(guiGraphics, atlasTextureAtlas, pageRenderPosition.x, pageRenderPosition.y2() - 38, inventoryBarRect);
+            GuiRenderer.sprite(guiGraphics, atlasTextureAtlas, pageRenderPosition.x, pageRenderPosition.y2() - 56, inventoryBarRect);
+            GuiRenderer.sprite(guiGraphics, atlasTextureAtlas, pageRenderPosition.x, pageRenderPosition.y2() - 74, inventoryBarRect);
+            GuiRenderer.sprite(guiGraphics, atlasTextureAtlas, leftPos + 77, topPos + 30, inventorySlotRect);
+            GuiRenderer.sprite(guiGraphics, atlasTextureAtlas, leftPos + 95, topPos + 30, inventorySlotRect);
+            GuiRenderer.sprite(guiGraphics, atlasTextureAtlas, leftPos + 78, topPos + 31, paperIconRect);
+            GuiRenderer.sprite(guiGraphics, atlasTextureAtlas, leftPos + 96, topPos + 31, incSacIconRect);
+        }
         currentPage.render(guiGraphics, pageRenderPosition.fixed());
     }
     @Override
     protected void renderLabels(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY){
+        if (currentPage.shouldShowInventory) {
+            GuiRenderer.text(guiGraphics, playerInventoryTitle, pageRenderPositionLocal.x(), pageRenderPositionLocal.y2() - 84, 0xFFFFFFFF);
+        }
         return;
     }
     private void onPageButtonPressed(Button button) {
@@ -72,7 +95,7 @@ public class AtlasScreen extends AbstractContainerScreen<AtlasMenu> {
         currentPage = pageWillSwitchTo;
         if (showInventoryLastPage != currentPage.shouldShowInventory) {
             for (Slot slot : menu.slots) {
-                ((HideableSlot)slot).setActive(currentPage.shouldShowInventory);
+                ((IHideable)slot).setActive(currentPage.shouldShowInventory);
             }
         }
     }
