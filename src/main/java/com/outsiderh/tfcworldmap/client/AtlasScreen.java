@@ -7,8 +7,10 @@ import com.outsiderh.tfcworldmap.client.collection.Rect;
 import com.outsiderh.tfcworldmap.client.page.AtlasPage;
 import com.outsiderh.tfcworldmap.client.page.AtlasPages;
 import com.outsiderh.tfcworldmap.client.page.PaperAndInkPage;
+import com.outsiderh.tfcworldmap.common.Main;
 import com.outsiderh.tfcworldmap.common.menu.AtlasMenu;
 import com.outsiderh.tfcworldmap.common.menu.slot.IHideable;
+import com.outsiderh.tfcworldmap.common.save.AtlasData;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -21,7 +23,7 @@ import net.minecraft.world.inventory.Slot;
 
 public class AtlasScreen extends AbstractContainerScreen<AtlasMenu> {
     public static final FixedRect pageRenderPositionLocal = new FixedRect(13, 11, 162, 147);
-    private static final ResourceLocation atlasTextureAtlas = new ResourceLocation("tfcworldmap", "textures/gui/atlas.png");
+    private static final ResourceLocation atlasTextureAtlas = new ResourceLocation(Main.modId, "textures/gui/atlas.png");
     private static final FixedRect atlasRect = new FixedRect(1, 1, 190, 180);
     private static final FixedRect inventoryBarRect = new FixedRect(93, 237, 162, 18);
     private static final FixedRect inventorySlotRect = new FixedRect(93, 237, 18, 18);
@@ -77,7 +79,7 @@ public class AtlasScreen extends AbstractContainerScreen<AtlasMenu> {
             GuiRenderer.sprite(guiGraphics, atlasTextureAtlas, leftPos + 78, topPos + 31, paperIconRect);
             GuiRenderer.sprite(guiGraphics, atlasTextureAtlas, leftPos + 96, topPos + 31, incSacIconRect);
         }
-        currentPage.render(guiGraphics, pageRenderPosition.fixed());
+        currentPage.render(guiGraphics, pageRenderPosition.fixed(), AtlasData.of(menu.getExtraData()));
     }
     @Override
     protected void renderLabels(@Nonnull GuiGraphics guiGraphics, int mouseX, int mouseY){

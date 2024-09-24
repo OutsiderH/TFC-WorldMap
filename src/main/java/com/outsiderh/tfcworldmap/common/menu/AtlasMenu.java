@@ -1,6 +1,7 @@
 package com.outsiderh.tfcworldmap.common.menu;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.outsiderh.tfcworldmap.client.AtlasScreen;
 import com.outsiderh.tfcworldmap.common.AtlasItemStackHandler;
@@ -9,6 +10,7 @@ import com.outsiderh.tfcworldmap.common.item.AtlasItem;
 import com.outsiderh.tfcworldmap.common.menu.slot.FilteredSlotItemHandler;
 import com.outsiderh.tfcworldmap.common.menu.slot.HideableSlot;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -18,11 +20,11 @@ import net.minecraft.world.item.Items;
 
 public class AtlasMenu extends ItemStackMenu {
     private final AtlasItemStackHandler itemStackHandler;
-    public static AtlasMenu create(int id, Inventory inventory, InteractionHand usedHand, int usedSlot, ItemStack usedStack) {
-        return new AtlasMenu(id, inventory, usedHand, usedSlot, usedStack);
+    public static AtlasMenu create(int id, Inventory inventory, InteractionHand usedHand, int usedSlot, ItemStack usedStack, @Nullable CompoundTag extraData) {
+        return new AtlasMenu(id, inventory, usedHand, usedSlot, usedStack, extraData);
     }
-    protected AtlasMenu(int id, Inventory inventory, InteractionHand usedHand, int usedSlot, ItemStack usedStack) {
-        super(id, Main.RegistryObjects.atlasMenu.get(), inventory, usedHand, usedSlot, usedStack);
+    protected AtlasMenu(int id, Inventory inventory, InteractionHand usedHand, int usedSlot, ItemStack usedStack, @Nullable CompoundTag extraData) {
+        super(id, Main.RegistryObjects.atlasMenu.get(), inventory, usedHand, usedSlot, usedStack, extraData);
         itemStackHandler = AtlasItem.getItems(usedStack);
         itemStackHandler.deserializeNBT(usedStack.getTag());
         for (int i = 0; i < 9; ++i) {

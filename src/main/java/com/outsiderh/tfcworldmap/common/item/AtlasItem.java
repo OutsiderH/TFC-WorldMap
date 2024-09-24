@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import com.outsiderh.tfcworldmap.common.AtlasItemStackHandler;
 import com.outsiderh.tfcworldmap.common.menu.AtlasMenu;
 import com.outsiderh.tfcworldmap.common.menu.provider.ItemStackMenuProvider;
+import com.outsiderh.tfcworldmap.common.save.AtlasDataCapability;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +21,7 @@ public class AtlasItem extends Item {
     public static final String includedMapKey = "IncludedMap";
     public static final String containedItem0Key = "ContainedItem0";
     public static final String containedItem1Key = "ContainedItem1";
+    public static final String savedFileIdKey = "SavedFileId";
     public static AtlasItemStackHandler getItems(ItemStack atlasStack) {
         return new AtlasItemStackHandler(atlasStack);
     }
@@ -46,7 +48,7 @@ public class AtlasItem extends Item {
                 tag.put(containedItem1Key, ItemStack.EMPTY.save(new CompoundTag()));
             }
             serverPlayer.inventoryMenu.sendAllDataToRemote();
-            new ItemStackMenuProvider(AtlasMenu::create, null).openScreen(serverPlayer, usedHand);
+            new ItemStackMenuProvider(AtlasMenu::create, null).openScreen(serverPlayer, usedHand, buffer -> buffer.writeNbt(serverPlayer.getCapability(AtlasDataCapability.dummy).resolve().get().serializeNBT()));
         }
         return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide);
     }

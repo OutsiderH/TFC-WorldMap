@@ -16,7 +16,7 @@ public abstract class RegistryUtil {
     public static <T extends ItemStackMenu> RegistryObject<MenuType<T>> registerItemStackMenu(DeferredRegister<MenuType<?>> menuRegister, String name, Factory<T> factory) {
         return registerMenu(menuRegister, name, (id, inventory, buffer) -> {
             final BufferInfo info = ItemStackMenuProvider.readBuffer(buffer, inventory);
-            return factory.create(id, inventory, info.usedHand(), info.usedSlot(), info.usedStack());
+            return factory.create(id, inventory, info.usedHand(), info.usedSlot(), info.usedStack(), info.extraData());
         });
     }
     public static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenu(DeferredRegister<MenuType<?>> menuRegister, String name, IContainerFactory<T> factory) {

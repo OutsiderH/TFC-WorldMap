@@ -1,7 +1,9 @@
 package com.outsiderh.tfcworldmap.common.menu;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -13,11 +15,16 @@ public class ItemStackMenu extends Menu {
     protected final InteractionHand usedHand;
     protected final int usedSlot;
     protected final ItemStack usedStack;
-    protected ItemStackMenu(int id, MenuType<?> type, Inventory inventory, InteractionHand usedHand, int usedSlot, ItemStack usedStack) {
+    @Nullable protected CompoundTag extraData;
+    protected ItemStackMenu(int id, MenuType<?> type, Inventory inventory, InteractionHand usedHand, int usedSlot, ItemStack usedStack, @Nullable CompoundTag extraData) {
         super(id, type, inventory);
         this.usedHand = usedHand;
         this.usedSlot = usedSlot;
         this.usedStack = usedStack;
+        this.extraData = extraData;
+    }
+    public @Nullable CompoundTag getExtraData() {
+        return extraData;
     }
     @Override
     public void clicked(int slot, int button, @Nonnull ClickType clickType, @Nonnull Player player) {
@@ -31,6 +38,6 @@ public class ItemStackMenu extends Menu {
     }
     @FunctionalInterface
     public interface Factory<T extends ItemStackMenu> {
-        T create(int id, Inventory inventory, InteractionHand usedHand, int usedSlot, ItemStack usedStack);
+        T create(int id, Inventory inventory, InteractionHand usedHand, int usedSlot, ItemStack usedStack, @Nullable CompoundTag extraData);
     }
 }

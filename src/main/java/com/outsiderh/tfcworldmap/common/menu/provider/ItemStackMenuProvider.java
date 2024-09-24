@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import com.outsiderh.tfcworldmap.common.menu.ItemStackMenu;
 import com.outsiderh.tfcworldmap.common.menu.ItemStackMenu.Factory;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,7 +25,7 @@ public class ItemStackMenuProvider {
         int usedSlot = buffer.readByte();
         InteractionHand usedHand = usedSlot == -1 ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
         ItemStack usedStack = usedHand == InteractionHand.MAIN_HAND ? inventory.getItem(usedSlot) : inventory.offhand.get(0);
-        return new BufferInfo(usedHand, usedSlot, usedStack);
+        return new BufferInfo(usedHand, usedSlot, usedStack, buffer.isReadable() ? buffer.readNbt() : null);
     }
     public ItemStackMenuProvider(Factory<? extends ItemStackMenu> factory, @Nullable Component name) {
         this.factory = factory;
@@ -37,13 +38,13 @@ public class ItemStackMenuProvider {
         ItemStack usedStack = serverPlayer.getItemInHand(usedHand);
         int usedSlot = usedHand == InteractionHand.MAIN_HAND ? serverPlayer.getInventory().selected : -1;
         NetworkHooks.openScreen(serverPlayer, new SimpleMenuProvider(
-            (id, inventory, player) -> factory.create(id, inventory, usedHand, usedSlot, usedStack),
+            (id, inventory, player) -> factory.create(id, inventory, usedHand, usedSlot, usedStack, null),
             name == null ? usedStack.getHoverName() : name), (buffer) -> {
                 buffer.writeByte(usedSlot);
                 bufferConsumer.accept(buffer);
             });
     }
-    public record BufferInfo(InteractionHand usedHand, int usedSlot, ItemStack usedStack) {
+    public record BufferInfo(InteractionHand usedHand, int usedSlot, ItemStack usedStack, @Nullable CompoundTag extraData) {
 
     };
 }
